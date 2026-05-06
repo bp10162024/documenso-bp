@@ -80,7 +80,8 @@ export async function loader({ params, request }: Route.LoaderArgs) {
     fields.find((field) => field.type === FieldType.NAME)?.customText ||
     recipient.email;
 
-  const canSignUp = !isExistingUser && env('NEXT_PUBLIC_DISABLE_SIGNUP') !== 'true';
+  // Buddy Punch: upsell removed unconditionally
+  const canSignUp = false;
 
   const canRedirectToFolder =
     user && document.userId === user.id && document.folderId && document.team?.url;
