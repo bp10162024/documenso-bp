@@ -36,7 +36,7 @@ export const OrganisationInviteEmailTemplate = ({
   const { _ } = useLingui();
   const branding = useBranding();
 
-  const previewText = msg`Accept invitation to join an organisation on Buddy Punch`;
+  const previewText = msg`Accept your invitation`;
 
   return (
     <Html>
@@ -66,7 +66,7 @@ export const OrganisationInviteEmailTemplate = ({
 
             <Section className="p-2 text-slate-500">
               <Text className="text-center text-lg font-medium text-black">
-                <Trans>Join {organisationName} on Buddy Punch</Trans>
+                <Trans>You've been invited to {organisationName}</Trans>
               </Text>
 
               <Text className="my-1 text-center text-base">

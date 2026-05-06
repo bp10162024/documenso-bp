@@ -219,7 +219,7 @@ export const sendOrganisationMemberInviteEmail = async ({
   await mailer.sendMail({
     to: email,
     from: senderEmail,
-    subject: i18n._(msg`You have been invited to join ${organisation.name} on Buddy Punch`),
+    subject: i18n._(msg`You have been invited to join ${organisation.name}`),
     html,
     text,
   });
