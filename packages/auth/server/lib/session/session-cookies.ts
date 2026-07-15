@@ -28,6 +28,11 @@ const getAuthSecret = () => {
 
 /**
  * Generic auth session cookie options.
+ *
+ * Note: `expires` is intentionally NOT set here. It must be computed per call
+ * (see setSessionCookie) — a module-level Date is frozen at process boot, so
+ * after 30 days of uptime every session cookie would be set already-expired
+ * and browsers silently drop it (infinite /signin loop). Matches upstream fix.
  */
 export const sessionCookieOptions = {
   httpOnly: true,
@@ -35,7 +40,6 @@ export const sessionCookieOptions = {
   sameSite: useSecureCookies ? 'none' : 'lax',
   secure: useSecureCookies,
   domain: getCookieDomain(),
-  expires: new Date(Date.now() + AUTH_SESSION_LIFETIME),
 } as const;
 
 export const extractSessionCookieFromHeaders = (headers: Headers): string | null => {
@@ -61,13 +65,10 @@ export const getSessionCookie = async (c: Context): Promise<string | null> => {
  * @param sessionToken - The session token to set.
  */
 export const setSessionCookie = async (c: Context, sessionToken: string) => {
-  await setSignedCookie(
-    c,
-    sessionCookieName,
-    sessionToken,
-    getAuthSecret(),
-    sessionCookieOptions,
-  ).catch((err) => {
+  await setSignedCookie(c, sessionCookieName, sessionToken, getAuthSecret(), {
+    ...sessionCookieOptions,
+    expires: new Date(Date.now() + AUTH_SESSION_LIFETIME),
+  }).catch((err) => {
     appLog('SetSessionCookie', `Error setting signed cookie: ${err}`);
 
     throw err;
